@@ -1,5 +1,4 @@
 const { Schema, model } = require("mongoose");
-const Reaction = require("./Reaction");
 
 //function to set timestamp
 function timeStamp(createdAt) {
@@ -16,6 +15,36 @@ function timeStamp(createdAt) {
   );
 }
 
+//subdocument schema
+const reactionSchema = new Schema(
+  {
+    reactionId: {
+      type: Schema.Types.ObjectId,
+      default: () => new Types.ObjectId(),
+    },
+    reactionBody: {
+      type: String,
+      required: true,
+      maxLength: 280,
+    },
+    username: {
+      type: String,
+      required: true,
+    },
+    createAt: {
+      type: Date,
+      default: Date.now,
+      get: timeStamp,
+    },
+  },
+  {
+    toJSON: {
+      virtuals: true,
+    },
+    id: false,
+  }
+);
+
 //Schema to create Thought model
 const thoughtSchema = new Schema(
   {
@@ -26,7 +55,7 @@ const thoughtSchema = new Schema(
       maxLength: 280,
     },
     createAt: {
-      Date,
+      type: Date,
       default: Date.now,
       get: timeStamp,
     },
@@ -34,7 +63,7 @@ const thoughtSchema = new Schema(
       type: String,
       required: true,
     },
-    reactions: [Reaction],
+    reactions: [reactionSchema],
   },
   {
     toJSON: {
@@ -46,9 +75,10 @@ const thoughtSchema = new Schema(
 );
 
 thoughtSchema.virtuals("reactionCount").get(function () {
+  //Create a getter for the virtual that returns reaction count
   return `${this.reactions.length}`;
 });
 
+// Initialize Thought model
 const Thought = model("thought", thoughtSchema);
-
 module.exports = Thought;
