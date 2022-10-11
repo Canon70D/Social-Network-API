@@ -1,7 +1,7 @@
 const { ObjectId } = require("mongoose").Types;
 const { User, Thought } = require("../models");
 
-module.export = {
+module.exports = {
   //get all users
   getUsers(req, res) {
     User.find()
@@ -11,7 +11,7 @@ module.export = {
   //get a user
   getSingleUser(req, res) {
     User.findOne({ _id: req.params.userId })
-      .selec("-__v")
+      .select("-__v")
       .then((user) =>
         !user
           ? res.status(404).json({ message: "No user with that ID" })

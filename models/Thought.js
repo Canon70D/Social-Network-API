@@ -16,34 +16,26 @@ function timeStamp(createdAt) {
 }
 
 //subdocument schema
-const reactionSchema = new Schema(
-  {
-    reactionId: {
-      type: Schema.Types.ObjectId,
-      default: () => new Types.ObjectId(),
-    },
-    reactionBody: {
-      type: String,
-      required: true,
-      maxLength: 280,
-    },
-    username: {
-      type: String,
-      required: true,
-    },
-    createAt: {
-      type: Date,
-      default: Date.now,
-      get: timeStamp,
-    },
+const reactionSchema = new Schema({
+  reactionId: {
+    type: Schema.Types.ObjectId,
+    default: () => new Types.ObjectId(),
   },
-  {
-    toJSON: {
-      virtuals: true,
-    },
-    id: false,
-  }
-);
+  reactionBody: {
+    type: String,
+    required: true,
+    maxLength: 280,
+  },
+  username: {
+    type: String,
+    required: true,
+  },
+  createAt: {
+    type: Date,
+    default: Date.now,
+    get: timeStamp,
+  },
+});
 
 //Schema to create Thought model
 const thoughtSchema = new Schema(
@@ -61,6 +53,7 @@ const thoughtSchema = new Schema(
     },
     username: {
       type: String,
+      trf: "user",
       required: true,
     },
     reactions: [reactionSchema],
@@ -74,7 +67,7 @@ const thoughtSchema = new Schema(
   }
 );
 
-thoughtSchema.virtuals("reactionCount").get(function () {
+thoughtSchema.virtual("reactionCount").get(function () {
   //Create a getter for the virtual that returns reaction count
   return `${this.reactions.length}`;
 });

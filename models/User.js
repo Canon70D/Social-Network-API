@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoos");
+const { Schema, model } = require("mongoose");
 
 //email validation function
 const validateEmail = function (email) {
