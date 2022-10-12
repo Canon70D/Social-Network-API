@@ -1,5 +1,4 @@
-const { ObjectId } = require("mongoose").Types;
-const { User, Thought } = require("../models");
+const { User } = require("../models");
 
 module.exports = {
   //get all users
@@ -48,9 +47,8 @@ module.exports = {
       .then((user) =>
         !user
           ? res.status(404).json({ message: "No user with that ID" })
-          : Thought.deleteMany({ _id: { $in: user.thoughts } })
+          : res.json({ message: "User deleted" })
       )
-      .then(() => res.json({ message: "User and thought deleted" }))
       .catch((err) => res.status(500).json(err));
   },
 

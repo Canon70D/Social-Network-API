@@ -1,5 +1,3 @@
-const { ObjectId } = require("mongoose").Types;
-
 const userSeed = [
   {
     username: "Name 1",

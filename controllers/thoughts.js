@@ -1,5 +1,4 @@
-const { ObjectId } = require("mongoose").Types;
-const { User, Thought } = require("../models");
+const { Thought } = require("../models");
 
 module.exports = {
   //get all thoughts
@@ -11,7 +10,7 @@ module.exports = {
   //get a thought
   getSingleThought(req, res) {
     Thought.findOne({ _id: req.params.thoughtId })
-      .selec("-__v")
+      .select("-__v")
       .then((thought) =>
         !thought
           ? res.status(404).json({ message: "No thought with that ID" })
@@ -57,10 +56,10 @@ module.exports = {
   createReaction(req, res) {
     Thought.findOneAndUpdate(
       { _id: req.params.thoughtId },
-      { $addToSet: { reaction: req.body } },
+      { $addToSet: { reactions: req.body } },
       { runValidators: true, new: true }
     )
-      .then((thought) => res.json(thought))
+      .then((reactions) => res.json(reactions))
       .catch((err) => {
         console.log(err);
         return res.status(500).json(err);
@@ -71,10 +70,10 @@ module.exports = {
   deleteReaction(req, res) {
     Thought.findOneAndUpdate(
       { _id: req.params.thoughtId },
-      { $pull: { reaction: { reactionId: req.body.reactionId } } },
+      { $pull: { reactions: { reactionId: req.body.reactionId } } },
       { runValidators: true, new: true }
     )
-      .then((thought) => res.json(thought))
+      .then((reaction) => res.json(reaction))
       .catch((err) => {
         console.log(err);
         return res.status(500).json(err);
