@@ -19,11 +19,11 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
   //create a thought
-  createThought(req, res) {
-    Thought.create(req)
+  createThought({ params, body }, res) {
+    Thought.create(body)
       .then(({ _id }) => {
         return User.findByIdAndUpdate(
-          { _id: req.userId },
+          { _id: body.userId },
           { $push: { thoughts: _id } },
           { new: true }
         );
